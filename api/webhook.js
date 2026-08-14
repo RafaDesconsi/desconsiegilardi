@@ -32,21 +32,22 @@ export default async function handler(req, res) {
         const { data: existing } = await supabase
           .from('leads')
           .select('id')
-          .eq('phone', phone)
+          .eq('contato', phone)
           .maybeSingle();
 
         if (!existing) {
           await supabase.from('leads').insert({
-            name,
-            phone,
-            last_message: text,
-            status: 'novo',
+            nome: name,
+            contato: phone,
+            nicho: 'WhatsApp',
+            observacoes: text,
+            column_id: 'novo_lead',
           });
         } else {
           await supabase
             .from('leads')
-            .update({ last_message: text })
-            .eq('phone', phone);
+            .update({ observacoes: text })
+            .eq('id', existing.id);
         }
       }
 
